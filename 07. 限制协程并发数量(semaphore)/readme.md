@@ -6,6 +6,8 @@
 
 3. [爬取博客详细页面的标题(python3.5以上,async/await,aiohttp)](https://blog.csdn.net/u013055678/article/details/54172693)
 
+4. [python 3.7 Semaphore官方文档](https://docs.python.org/3/library/asyncio-sync.html?highlight=semaphore#semaphore)
+
 虽然协程比线程更轻量, 占用资源更少, 但也不能无限制的增加. 如果每个协程任务不只占用IO, 如果协程还消耗了较多了CPU/内存呢? 按照生产者/消费者模型, 生产者不停向队列里添加任务, 消费者不停从队列里取任务并向循环中添加, 如果没有限制, 终究会耗尽服务器资源的.
 
 没错, 就类似线程池, 我们也需要协程池. `asyncio`提供了`semaphore`机制, 来限制同时执行的协程数量.
@@ -16,9 +18,33 @@
 
 不过网上大部分示例都没有调用过`acquire()`和`release()`方法, 而是直接把`semaphore`对象当作上下文管理器来用.
 
+参考文章4中展示了semaphore对象的两种不同的使用方式.
+
 ```py
-#asyncio.Semaphore(),限制同时运行协程数量
-sem = asyncio.Semaphore(5)
-with (await sem):
-    result = await co_func()
+sem = asyncio.Semaphore(10)
+
+# ... later
+async with sem:
+    # work with shared resource
 ```
+
+和
+
+```py
+sem = asyncio.Semaphore(10)
+
+# ... later
+await sem.acquire()
+try:
+    # work with shared resource
+finally:
+    sem.release()
+```
+
+------
+
+在试验过程中, 我曾尝试在`customer`函数的`while`循环中添加`semaphore`锁, 但是无效, 然后注释掉了. 猜测`semaphore`只在事件循环内部才有效, 单纯的`await`一个协程任务是没有用的.
+
+...那什么是事件循环内部?
+
+我们通过`run_coroutine_threadsafe`添加协程任务到事件循环, 通过`wait`等待一堆任务在事件循环中执行完毕...类似这种, 在协程中调用`semaphore`锁才有意义.
