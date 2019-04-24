@@ -14,12 +14,9 @@ python是同步语言, 许多原生方法也是按同步方式写的. 异步协�
 
 ------
 
-`simple_get`: 单个异步请求;
-
-`simple_get_timeout`: 单个异步请求, 使用`asyncio.wait`, 设置一个超时时间;
-
-`multi_get`: 异步请求列表, 同时发起多个请求;
-
-`multi_get_timeout`: 异步请求列表, 也设置了超时;
+- `simple_get.py`: 单个异步请求;
+- `simple_get_timeout.py`: 单个异步请求, 使用`asyncio.wait`, 设置一个超时时间;
+- `multi_get.py`: 异步请求列表, 同时发起多个请求并设置了回调函数;
+- `multi_get_timeout.py`: 异步请求列表, 也设置了超时及回调函数;
 
 这几个示例过于死板, 只能添加静态任务, 无法动态添加...
