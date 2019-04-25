@@ -12,10 +12,5 @@
 
 示例
 
-- asyncio_with_thread_demo.py
-
-- asyncio_with_thread_production.py
-
-`demo`展示了在子线程中运行协程基本流程, 但是无法正常关闭, 包括aiohttp的ClientSession和asyncio的loop. 
-
-`production`修复了这个问题. 其中最重要的`loop.call_soon_threadsafe(loop.stop)`是根据参考文章1, 2, 3的python邮件列表.
+- `asyncio_with_thread_demo.py`: 展示了在子线程中运行协程基本流程, 但是无法正常关闭, 包括aiohttp的ClientSession和asyncio的loop. 
+- `asyncio_with_thread_production.py`: 修复了demo的问题. 其中最重要的`loop.call_soon_threadsafe(loop.stop)`是根据参考文章1, 2, 3的python邮件列表.
