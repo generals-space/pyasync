@@ -29,8 +29,6 @@ try:
 
     for i in range(5):
         loop.call_soon_threadsafe(request_page, i, session, loop)
-        ## loop.call_soon()会卡住
-        ## loop.call_soon(request_page, i, session, loop)
 
     ## join()时ctrl-c无法结束, 而while True可以.
     ## loopThread.join()
@@ -39,14 +37,19 @@ try:
 
 except KeyboardInterrupt as e:
     ## 以下两行可以注释掉, 不会报错
-    asyncio.run_coroutine_threadsafe(session.close(), loop)
-    time.sleep(1)
+    ## asyncio.run_coroutine_threadsafe(session.close(), loop)
+    ## time.sleep(1)
     loop.stop()
 
 
 ## 输出
-## order: 3, result: b'{"delay":1}'
-## order: 1, result: b'{"delay":9}'
-## order: 0, result: b'{"delay":13}'
-## order: 4, result: b'{"delay":22}'
-## order: 2, result: b'{"delay":30}'
+## order: 0, result: b'{"delay":9}'
+## request 0 to https://note.generals.space/aio success
+## order: 3, result: b'{"delay":12}'
+## request 3 to https://note.generals.space/aio success
+## order: 2, result: b'{"delay":18}'
+## request 2 to https://note.generals.space/aio success
+## order: 1, result: b'{"delay":24}'
+## request 1 to https://note.generals.space/aio success
+## order: 4, result: b'{"delay":28}'
+## request 4 to https://note.generals.space/aio success
