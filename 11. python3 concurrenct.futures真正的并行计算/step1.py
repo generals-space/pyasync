@@ -1,7 +1,7 @@
 import asyncio
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 
-def cpu_bound():
+def blocking_cpu():
     # CPU-bound operations will block the event loop:
     # in general it is preferable to run them in a
     # process pool.
