@@ -1,76 +1,57 @@
-import asyncio
-import threading
-import aiohttp
-from datetime import datetime
 import time
+import threading
+import asyncio
+import aiohttp
 
 url = 'https://note.generals.space/aio'
-
-start = time.time()
 
 def keep_loop(loop):
     asyncio.set_event_loop(loop)
     loop.run_forever()
 
-async def waitTask(session, order):
+async def request_page(session, order):
     res = await session.get(url)
     ## resText = await res.text()
     resText = await res.json()
     print('order %d: %s' % (order, resText))
     return resText
 
-async def closeSession(session):
-    return await session.close()
-
-def callback(future):
-    print('calling callback...')
-    print(future.result())
-
-def main():
+try:
     loop = asyncio.get_event_loop()
     loopThread = threading.Thread(target = keep_loop, args = (loop, ))
+    ## 子线程随主线程退出而退出
     loopThread.setDaemon(True)
-
     loopThread.start()
+
     aioSession = aiohttp.ClientSession(loop = loop)
 
-    for i in range(0, 10):
-        coroutine = waitTask(aioSession, i)
-        _concurrentFuture = asyncio.run_coroutine_threadsafe(coroutine, loop)
-        ## 添加协程回调函数的方式
-        _concurrentFuture.add_done_callback(callback)
-    ## join()方法等待目标线程结束, 没有返回值, 只会阻塞
-    ## 在timeout时间内如果线程没有结束, join()方法仍然会结束阻塞, 让主线程继续执行(子线程依然会存在)
-    loopThread.join(timeout = 40)
+    for i in range(0, 5):
+        co = request_page(aioSession, i)
+        ## future对象可以添加回调函数
+        future = asyncio.run_coroutine_threadsafe(co, loop)
 
-    ## 协程执行完毕后关闭aiohttp.ClientSession, 注意方式, 要用协程完成.
-    closeCoroutine = closeSession(aioSession)
-    asyncio.run_coroutine_threadsafe(closeCoroutine, loop)
-    time.sleep(0.5) ## 这里不知道有没有必要
-    
-    ## 注意stop与close的调用方式
-    print(loop)
-    loop.call_soon_threadsafe(loop.stop)
-    ## 这里可能有必要, 在协程并没有完全执行完成时关闭事件循环, 会需要一点时间
-    time.sleep(5)
-    print(loop)
-    loop.close()
-    print(loop)
+    ## 不再使用join(timeout=timeout)方法, 毕竟实际场景中timeout的时间无法控制. 
+    ## 另外, 直接使用join()无法接受到ctrl-c信号, 这里使用while循环替代
+    while True: time.sleep(1)
 
-if __name__ == '__main__':
-    main()
+except KeyboardInterrupt as err:
+    print('stoping...')
+    ## 这里要将事件循环中的任务全部手动停止, 否则在loop.close()时会出现
+    ## Task was destroyed but it is pending!
+    for task in asyncio.Task.all_tasks():
+        task.cancel()
+    ## aioSession.close()是awaitable的协程对象
+    asyncio.run_coroutine_threadsafe(aioSession.close(), loop)
+    ## 事件循环的stop与close方法都是普通函数.
+    loop.stop()
+    ## 貌似不需要close(), 如果要调用close(), 需要在stop()后留出一点时间, 
+    ## 否则会报RuntimeError: Cannot close a running event loop
+    ## time.sleep(1)
+    ## loop.close()
 
 
-## order 6: {'delay': 1}
-## order 8: {'delay': 2}
-## order 5: {'delay': 3}
-## order 9: {'delay': 3}
-## order 3: {'delay': 5}
-## order 7: {'delay': 7}
-## order 2: {'delay': 15}
-## order 4: {'delay': 19}
-## order 0: {'delay': 27}
-## order 1: {'delay': 28}
-## <_WindowsSelectorEventLoop running=True closed=False debug=False>
-## <_WindowsSelectorEventLoop running=True closed=False debug=False>
-## <_WindowsSelectorEventLoop running=False closed=True debug=False>
+## 输出
+## order 4: {'delay': 8}
+## order 2: {'delay': 16}
+## order 1: {'delay': 18}
+## stoping...

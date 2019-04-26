@@ -11,7 +11,7 @@ start = time.time()
 def keep_loop(loop):
     loop.run_forever()
 
-async def waitTask(session, order):
+async def request_page(session, order):
     res = await session.get(url)
     ## resText = await res.text()
     resText = await res.json()
@@ -27,7 +27,7 @@ def main():
     aioSession = aiohttp.ClientSession(loop = loop)
 
     for i in range(0, 10):
-        coroutine = waitTask(aioSession, i)
+        coroutine = request_page(aioSession, i)
         _concurrentFuture = asyncio.run_coroutine_threadsafe(coroutine, loop)
     
     loopThread.join(timeout = 40)
