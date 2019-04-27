@@ -1,0 +1,10 @@
+version: '3'
+services:
+  postgres-svc:
+    image: postgres
+    environment:
+    - "POSTGRES_DB=mydb"
+    - "POSTGRES_USER=my"
+    - "POSTGRES_PASSWORD=123456"
+    ports:
+    - "5432:5432"
