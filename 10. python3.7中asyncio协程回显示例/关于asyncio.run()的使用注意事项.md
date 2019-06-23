@@ -1,6 +1,6 @@
 # 关于asyncio.run()的使用注意事项
 
-asyncio.run()与`asyncio.get_event_loop()`不能同时使用...看看示例吧.
+`asyncio.run()`是python3.7新增的高级接口, 与`loop.run_until_complete()`相似, 但是不能混用...看看示例吧.
 
 正确1:
 
