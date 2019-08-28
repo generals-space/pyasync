@@ -38,9 +38,3 @@ loop.run_until_complete(main(loop))
 
 end = time.time()
 print('cost %f' % (end - start))
-
-## 输出
-## task result type:  <class 'aiohttp.client_reqrep.ClientResponse'>
-## result read type:  <class 'bytes'>
-## result content:  b'{"delay":5}'
-## cost 6.382042

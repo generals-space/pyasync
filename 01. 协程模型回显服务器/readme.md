@@ -3,22 +3,11 @@
 参考文章
 
 1. [Python黑魔法 --- 异步IO（ asyncio） 协程](https://www.jianshu.com/p/b5e347b3a17c)
-
+    - 参考文章1深入浅出地介绍了协程及其相关概念(loop事件循环, task任务, future结果对象), 层层递进, 容易理解. 相对于`廖雪峰`老师对`async/await`的两篇介绍文章, 更加系统, 且条理更加分明. 只不过偏了一点, 并不完全适用我们`echo server`的使用场景. 但是入门的非常棒.
 2. [从 asyncio 简单实现看异步是如何工作的](https://ipfans.github.io/2016/02/simple-implement-asyncio-to-understand-how-async-works/)
-
+    - 比较符合我们的项目, 尤其是对于`echo server`的协程模型, 提供了较为底层的代码, 而不是像网上大部分示例中使用`start_server`, `reader`, `writer`, 或是`asyncio.Procotol`这种更高级的工具.
 3. [Low-level socket operations](https://docs.python.org/3.5/library/asyncio-eventloop.html#low-level-socket-operations)
 
-参考文章1深入浅出地介绍了协程及其相关概念(loop事件循环, task任务, future结果对象), 层层递进, 容易理解. 相对于`廖雪峰`老师对`async/await`的两篇介绍文章, 更加系统, 且条理更加分明.
-
-1. [asyncio](https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001432090954004980bd351f2cd4cc18c9e6c06d855c498000)
-
-2. [async/await](https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/00144661533005329786387b5684be385062a121e834ac7000)
-
-只不过偏了一点, 并不完全适用我们`echo server`的使用场景. 但是入门的非常棒.
-
-参考文章2比较符合我们的项目, 尤其是对于`echo server`的协程模型, 提供了较为底层的代码, 而不是像网上大部分示例中使用`start_server`, `reader`, `writer`, 或是`asyncio.Procotol`这种更高级的工具.
-
-------
 
 server端`async_server.py`使用了`asyncio`自带的底层封装`sock_accept`, `sock_recv`和`sock_send`, 需要python3.5+. 
 

@@ -45,24 +45,3 @@ loop.run_until_complete(main(loop))
 
 end = time.time()
 print('cost %f' % (end - start))
-
-## 输出
-## request 1 to https://note.generals.space/aio success
-## request 4 to https://note.generals.space/aio success
-## request 2 to https://note.generals.space/aio success
-## task result type:  <class 'aiohttp.client_reqrep.ClientResponse'>
-## result read type:  <class 'bytes'>
-## result content:  b'{"delay":9}'
-## task result type:  <class 'aiohttp.client_reqrep.ClientResponse'>
-## result read type:  <class 'bytes'>
-## result content:  b'{"delay":8}'
-## task result type:  <class 'aiohttp.client_reqrep.ClientResponse'>
-## result read type:  <class 'bytes'>
-## result content:  b'{"delay":3}'
-## timeout...
-## <Task pending coro=<<_RequestContextManager without __name__>()> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x038F1390>()]> cb=[callback(3, 'https://note.generals.space/aio')() at .\multi_get_timeout.py:13]>
-## <class '_asyncio.Task'>
-## timeout...
-## <Task pending coro=<<_RequestContextManager without __name__>()> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x038DF810>()]> cb=[callback(0, 'https://note.generals.space/aio')() at .\multi_get_timeout.py:13]>
-## <class '_asyncio.Task'>
-## cost 10.005833

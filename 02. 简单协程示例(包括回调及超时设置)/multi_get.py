@@ -32,26 +32,3 @@ loop.run_until_complete(main(loop))
 
 end = time.time()
 print('cost %f' % (end - start))
-
-## 输出
-## request 1 to https://note.generals.space/aio success
-## request 2 to https://note.generals.space/aio success
-## request 4 to https://note.generals.space/aio success
-## request 5 to https://note.generals.space/aio success
-## request 0 to https://note.generals.space/aio success
-## request 3 to https://note.generals.space/aio success
-## request 9 to https://note.generals.space/aio success
-## request 6 to https://note.generals.space/aio success
-## request 7 to https://note.generals.space/aio success
-## request 8 to https://note.generals.space/aio success
-## b'{"delay":24}'
-## b'{"delay":12}'
-## b'{"delay":28}'
-## b'{"delay":23}'
-## b'{"delay":17}'
-## b'{"delay":26}'
-## b'{"delay":29}'
-## b'{"delay":16}'
-## b'{"delay":17}'
-## b'{"delay":21}'
-## cost 29.044463
