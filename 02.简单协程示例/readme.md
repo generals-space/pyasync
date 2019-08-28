@@ -1,5 +1,9 @@
 # 02. 简单协程示例(包括回调及超时设置)
 
+参考文章
+
+1. [python asyncio add_done_callback with async def](https://stackoverflow.com/questions/44345139/python-asyncio-add-done-callback-with-async-def)
+
 ## 1. 引言
 
 python是同步语言, 许多原生方法也是按同步方式写的. 异步协程库比如`twisted`, `tornado`框架, 3.5+的`asyncio`库, 都提供了各自的异步方法.
@@ -21,6 +25,8 @@ python是同步语言, 许多原生方法也是按同步方式写的. 异步协�
 回调的魅力在并发, 单个异步请求基本看不出其优势, 所以本节还给出了多个异步请求的示例.
 
 不过这几个示例过于死板, 只能添加静态任务, 无法动态添加...
+
+另外, asyncio提供的`add_done_callback()`绑定的回调函数只能是普通函数, 不能是`async`声明的异步函数. 参考文章1有提供异步函数作回调函数的思路, 可以参考.
 
 ### 2.1 `simple_get.py`: 单个异步请求
 
