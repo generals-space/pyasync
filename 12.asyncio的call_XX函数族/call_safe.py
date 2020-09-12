@@ -4,7 +4,7 @@ import threading
 
 from aiohttp import ClientSession
 
-url = 'https://note.generals.space/aio'
+url = 'http://localhost:3000/aio'
 
 def keep_loop(loop):
     asyncio.set_event_loop(loop)

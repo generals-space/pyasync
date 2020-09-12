@@ -4,7 +4,7 @@ import asyncio
 import time
 from aiohttp import ClientSession
 
-url = 'https://note.generals.space/aio'
+url = 'http://localhost:3000/aio'
 start = time.time()
 
 async def main(loop):

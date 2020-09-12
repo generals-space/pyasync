@@ -4,7 +4,7 @@ import asyncio
 import time
 from aiohttp import ClientSession
 
-url = 'https://note.generals.space/aio'
+url = 'http://localhost:3000/aio'
 task_queue = asyncio.Queue()
 
 ## 为了能明显的看出semaphore的效果, 这里设置的小一些.
@@ -28,6 +28,7 @@ async def customer(loop):
     ##         _order, _url = await task_queue.get()
     ##         asyncio.run_coroutine_threadsafe(fetch_url(aioSession, _order, _url), loop)
     while True:
+        ## _order 任务序号, 用来标识任务的先后顺序
         _order, _url = await task_queue.get()
         asyncio.run_coroutine_threadsafe(fetch_url(aioSession, _order, _url), loop)
     print('customer complete...')

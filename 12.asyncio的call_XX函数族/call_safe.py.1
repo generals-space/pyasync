@@ -4,7 +4,7 @@ import threading
 
 from aiohttp import ClientSession
 
-url = 'https://note.generals.space/aio'
+url = 'http://localhost:3000/aio'
 
 def keep_loop(loop):
     asyncio.set_event_loop(loop)
@@ -44,12 +44,12 @@ except KeyboardInterrupt as e:
 
 ## 输出
 ## order: 0, result: b'{"delay":9}'
-## request 0 to https://note.generals.space/aio success
+## request 0 to http://localhost:3000/aio success
 ## order: 3, result: b'{"delay":12}'
-## request 3 to https://note.generals.space/aio success
+## request 3 to http://localhost:3000/aio success
 ## order: 2, result: b'{"delay":18}'
-## request 2 to https://note.generals.space/aio success
+## request 2 to http://localhost:3000/aio success
 ## order: 1, result: b'{"delay":24}'
-## request 1 to https://note.generals.space/aio success
+## request 1 to http://localhost:3000/aio success
 ## order: 4, result: b'{"delay":28}'
-## request 4 to https://note.generals.space/aio success
+## request 4 to http://localhost:3000/aio success

@@ -5,7 +5,7 @@ from tornado import ioloop, queues, httpclient, gen
 from datetime import timedelta
 import time
 
-url = 'https://note.generals.space/aio'
+url = 'http://localhost:3000/aio'
 q = queues.Queue()
 loop = None
 

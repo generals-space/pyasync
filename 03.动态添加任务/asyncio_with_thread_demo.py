@@ -4,7 +4,7 @@ import aiohttp
 from datetime import datetime
 import time
 
-url = 'https://note.generals.space/aio'
+url = 'http://localhost:3000/aio'
 
 start = time.time()
 

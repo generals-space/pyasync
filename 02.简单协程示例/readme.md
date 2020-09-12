@@ -16,7 +16,7 @@ python是同步语言, 许多原生方法也是按同步方式写的. 异步协�
 
 想想, 网上大部分教程都拿`await asyncio.sleep(n)`来模拟耗时IO操作, 这是因为`asyncio.sleep(n)`是异步方法, 对于当前协程当会交出CPU, n秒之后会切换回来继续, 但在同一个线程里的其他协程能够开始执行, 不会造成资源浪费. 如果使用`await time.sleep(n)`呢? 原生`sleep`是一个同步方法, 会一直占用CPU, 无法切换.
 
-本章`02. 协程流程示例`中, 使用了一个`http://note.generals.space/aio`接口, 对于一个请求, 它会随机沉睡`1-30`秒再返回, 返回的内容是一个json字符串, 结构为`{delay: 沉睡的秒数}`, 示例中用这个接口来学习协程的使用方法.
+本章`02. 协程流程示例`中, 使用了一个`http://localhost:3000/aio`接口(由示例14实现). 对于一个请求, 它会随机沉睡`1-30`秒再返回, 返回的内容是一个json字符串, 结构为`{delay: 沉睡的秒数}`, 示例中用这个接口来学习协程的使用方法.
 
 正如我上面所说, `await urllib.urlopen(url)`没有任何意义, 所以这些示例都将使用`aiohttp`库提供的异步函数.
 
@@ -61,16 +61,16 @@ cost 6.382042
 输出
 
 ```
-request 1 to https://note.generals.space/aio success
-request 2 to https://note.generals.space/aio success
-request 4 to https://note.generals.space/aio success
-request 5 to https://note.generals.space/aio success
-request 0 to https://note.generals.space/aio success
-request 3 to https://note.generals.space/aio success
-request 9 to https://note.generals.space/aio success
-request 6 to https://note.generals.space/aio success
-request 7 to https://note.generals.space/aio success
-request 8 to https://note.generals.space/aio success
+request 1 to http://localhost:3000/aio success
+request 2 to http://localhost:3000/aio success
+request 4 to http://localhost:3000/aio success
+request 5 to http://localhost:3000/aio success
+request 0 to http://localhost:3000/aio success
+request 3 to http://localhost:3000/aio success
+request 9 to http://localhost:3000/aio success
+request 6 to http://localhost:3000/aio success
+request 7 to http://localhost:3000/aio success
+request 8 to http://localhost:3000/aio success
 b'{"delay":24}'
 b'{"delay":12}'
 b'{"delay":28}'
@@ -91,9 +91,9 @@ cost 29.044463
 输出
 
 ```
-request 1 to https://note.generals.space/aio success
-request 4 to https://note.generals.space/aio success
-request 2 to https://note.generals.space/aio success
+request 1 to http://localhost:3000/aio success
+request 4 to http://localhost:3000/aio success
+request 2 to http://localhost:3000/aio success
 task result type:  <class 'aiohttp.client_reqrep.ClientResponse'>
 result read type:  <class 'bytes'>
 result content:  b'{"delay":9}'
@@ -104,10 +104,10 @@ task result type:  <class 'aiohttp.client_reqrep.ClientResponse'>
 result read type:  <class 'bytes'>
 result content:  b'{"delay":3}'
 timeout...
-<Task pending coro=<<_RequestContextManager without __name__>()> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x038F1390>()]> cb=[callback(3, 'https://note.generals.space/aio')() at .\multi_get_timeout.py:13]>
+<Task pending coro=<<_RequestContextManager without __name__>()> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x038F1390>()]> cb=[callback(3, 'http://localhost:3000/aio')() at .\multi_get_timeout.py:13]>
 <class '_asyncio.Task'>
 timeout...
-<Task pending coro=<<_RequestContextManager without __name__>()> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x038DF810>()]> cb=[callback(0, 'https://note.generals.space/aio')() at .\multi_get_timeout.py:13]>
+<Task pending coro=<<_RequestContextManager without __name__>()> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x038DF810>()]> cb=[callback(0, 'http://localhost:3000/aio')() at .\multi_get_timeout.py:13]>
 <class '_asyncio.Task'>
 cost 10.005833
 ```

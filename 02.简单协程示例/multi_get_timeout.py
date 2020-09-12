@@ -5,7 +5,7 @@ import time
 from aiohttp import ClientSession
 import functools
 
-url = 'https://note.generals.space/aio'
+url = 'http://localhost:3000/aio'
 start = time.time()
 
 ## 需要接收task，如果要接收其他的参数就需要用到partial(偏函数),参数需要放到前面
