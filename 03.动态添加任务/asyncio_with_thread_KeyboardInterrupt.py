@@ -19,8 +19,8 @@ async def request_page(session, order):
 try:
     loop = asyncio.get_event_loop()
     loopThread = threading.Thread(target = keep_loop, args = (loop, ))
-    ## 子线程随主线程退出而退出, 如果不加这个, ctrl-c 时就算有了 try..catch.. 也会报异常.
-    loopThread.setDaemon(True)
+    ## 子线程随主线程退出而退出
+    ## loopThread.setDaemon(True)
     loopThread.start()
 
     aioSession = aiohttp.ClientSession(loop = loop)
@@ -30,10 +30,10 @@ try:
         co = request_page(aioSession, i)
         ## future对象可以添加回调函数
         future = asyncio.run_coroutine_threadsafe(co, loop)
-
+    print('主线程不会阻塞...')
     ## 不再使用join(timeout=timeout)方法, 毕竟实际场景中timeout的时间无法控制. 
     ## 另外, 直接使用join()无法接受到ctrl-c信号, 这里使用while循环替代
-    while True: time.sleep(1)
+    ## while True: time.sleep(1)
 
 except KeyboardInterrupt as err:
     print('stoping...')

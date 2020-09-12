@@ -1,3 +1,13 @@
+参考文章
+
+5. [python 中的 asyncio 使用详解与异步协程的处理流程分析](https://testerhome.com/articles/19703)
+    - 示例清晰, 代码很全
+    - wait和gather有哪些区别: 
+        - `gather`是需要所有任务都执行结束, 如果某一个协程函数崩溃了, 则会抛异常, 都不会有结果。
+        - `wait`可以定义函数返回的时机(`return_when`参数), 可以是`FIRST_COMPLETED`(第一个结束的), `FIRST_EXCEPTION`(第一个出现异常的), `ALL_COMPLETED`(全部执行完, 默认的)
+    - `run_in_executor()`的使用示例
+    - `asyncio.run_coroutine_threadsafe()`返回的是`concurrent.futures._base.Future`对象, 不能使用`await`, 但是可以添加回调`add_done_callback()`
+
 
 ## `loop.run_xxx()`家族: 事件主循环
 

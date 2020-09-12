@@ -10,6 +10,7 @@
 
 5. [asyncio提供的`add_done_callback()`绑定的回调函数只能是普通函数, 不能是`async`声明的异步函数](https://testerhome.com/articles/19703)
     - `asyncio.run_coroutine_threadsafe()`返回的是`concurrent.futures._base.Future`对象, 不能使用`await`, 但是可以添加回调`add_done_callback()`
+6. [07.限制协程并发数量-semaphore/task_pool.py任务完成后 并没有自动退出](https://github.com/generals-space/pyasync/issues/1)
 
 ## 1. 引言
 
@@ -60,20 +61,27 @@ finally:
 
 ## 3. 更新
 
-如果任务数量不确定, 一般`worker`线程是不会主动退出的. 
+今天收到一个issue, 见参考文章6.
+
+> 07.限制协程并发数量-semaphore/task_pool.py，任务完成后 并没有自动退出，如何自动退出？
+
+在写这个示例的时候, 我并没有考虑让程序自动退出的功能. 因为在实际场景中, 一般任务数量不能确定, `worker`线程是不会主动退出的. 
 
 如果按照本例实验过程中, 协程数量固定为50, 可以通过`run_coroutine_threadsafe()`方法返回的`future`对象进行判断, 见[02.简单协程示例/multi_get.py]()示例.
 
-但是示例02是所有协程同时发起, 然后统一等待结果. 在这个`Semaphore`示例中, 我们限制了并发数量为5, 可以每5个任务作为一批, 这一批全部执行完???
+但是示例02是所有协程同时发起, 然后统一等待结果. 在这个`Semaphore`示例中, 我们限制了并发数量为5, 总不能每5个任务作为一批, 这一批全部执行完再统一换下一批吧?
 
 我想他问的应该是希望协程池能有像线程池的`wait()`一样的功能(比如`threadpool`的`wait()`方法), 这种场景大多是先向线程池中添加任务, 添加完成后`start()`开始, 然后等待结果, 并不是一个动态的过程.
 
 ```py
-        reqs = makeRequests(self.worker, self.clusterList)
-        for req in reqs: self.tPool.putRequest(req)
-        start_time = time.time()
-        logger.info('启动线程池... %d' % POOL_SIZE)
-        self.tPool.wait()
-        end_time = time.time()
+from threadpool import ThreadPool, makeRequests
+
+## 创建任务
+reqs = makeRequests(self.worker, self.clusterList)
+## 将任务添加到线程池中
+for req in reqs: self.tPool.putRequest(req)
+logger.info('启动线程池... %d' % POOL_SIZE)
+self.tPool.wait()
 ```
 
+我最终也没有找到一个比较官方的方法, 只能用了一个比较 hack 的方式, 见`task_pool_fix.py`, 用**回调+结果集**两个条件一起判断最后一个协程执行完毕, 感觉...不太完美.
