@@ -15,7 +15,7 @@
 
 ## wait&gather等待执行
 
-`asyncio.gather(coroutine1, coroutine2...])`: 同时执行多个协程函数, 每个协程算是一个参数;
+`asyncio.gather(coroutine1, coroutine2...)`: 同时执行多个协程函数, 每个协程算是一个参数;
 `asyncio.wait([coroutine1, coroutine2...], timeout)`: 与`gather`一样, 同时执行多个协程函数, 不过协程函数是以列表形式传入的, 还可以设置超时时间;
 `asyncio.wait_for(coroutine, timeout)`: 执行单个协程函数, 也可以设置超时.
 
@@ -23,3 +23,13 @@
 
 6. `loop.call_soon_threadsafe(coroutine, loop)`
 5. `asyncio.run_coroutine_threadsafe(coroutine, loop)`: 跨线程执行协程, 调用了`loop.call_soon_threadsafe()`
+
+## add_done_callback()
+
+使用`async`声明的`coroutine`对象并不能直接执行, 也不能添加回调函数什么的, 需要事先将其包装成`task`对象.
+
+```py
+    co = fetch_url(aioSession, _order, _url)
+    task = asyncio.ensure_future(co)
+    task.add_done_callback(callback)
+```

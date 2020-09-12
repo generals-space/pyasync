@@ -8,6 +8,9 @@
 
 4. [python 3.7 Semaphore官方文档](https://docs.python.org/3/library/asyncio-sync.html?highlight=semaphore#semaphore)
 
+5. [asyncio提供的`add_done_callback()`绑定的回调函数只能是普通函数, 不能是`async`声明的异步函数](https://testerhome.com/articles/19703)
+    - `asyncio.run_coroutine_threadsafe()`返回的是`concurrent.futures._base.Future`对象, 不能使用`await`, 但是可以添加回调`add_done_callback()`
+
 ## 1. 引言
 
 虽然协程比线程更轻量, 占用资源更少, 但也不能无限制的增加. 如果每个协程任务不只占用IO, 如果协程还消耗了较多了CPU/内存呢? 按照生产者/消费者模型, 生产者不停向队列里添加任务, 消费者不停从队列里取任务并向循环中添加, 如果没有限制, 终究会耗尽服务器资源的.
@@ -45,7 +48,7 @@ finally:
 
 ## 2. 实践
 
-在本示例中, `producer`生产者创建了50个任务, 添加到异步队列中, 然后`customer`消费者从队列中取得任务并执行. 创建的过程很快就完成了, 因为本示例只是通过协程池来限制`customer`消费者的行为.
+在本示例中, `producer`生产者创建了50个任务, 添加到异步队列中, 然后`customer`消费者从队列中取得任务并执行. 创建的过程很快就完成了, 因为本示例只是通过协程池来限制`customer`消费者的行为, 并不是一个**生产<->消费**的双向流程.
 
 `customer`的行为表现就如同多线程一样, 只能同时执行5个任务, 但是只有等一个任务完成, 才能处理下一个.
 
@@ -54,3 +57,23 @@ finally:
 ...那什么是事件循环内部?
 
 我们通过`run_coroutine_threadsafe`添加协程任务到事件循环, 通过`wait`等待一堆任务在事件循环中执行完毕...类似这种, 在协程中调用`semaphore`锁才有意义.
+
+## 3. 更新
+
+如果任务数量不确定, 一般`worker`线程是不会主动退出的. 
+
+如果按照本例实验过程中, 协程数量固定为50, 可以通过`run_coroutine_threadsafe()`方法返回的`future`对象进行判断, 见[02.简单协程示例/multi_get.py]()示例.
+
+但是示例02是所有协程同时发起, 然后统一等待结果. 在这个`Semaphore`示例中, 我们限制了并发数量为5, 可以每5个任务作为一批, 这一批全部执行完???
+
+我想他问的应该是希望协程池能有像线程池的`wait()`一样的功能(比如`threadpool`的`wait()`方法), 这种场景大多是先向线程池中添加任务, 添加完成后`start()`开始, 然后等待结果, 并不是一个动态的过程.
+
+```py
+        reqs = makeRequests(self.worker, self.clusterList)
+        for req in reqs: self.tPool.putRequest(req)
+        start_time = time.time()
+        logger.info('启动线程池... %d' % POOL_SIZE)
+        self.tPool.wait()
+        end_time = time.time()
+```
+

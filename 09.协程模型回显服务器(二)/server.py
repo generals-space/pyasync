@@ -38,7 +38,8 @@ except KeyboardInterrupt:
     # server.wait_closed返回一个 future
     # 调用loop.run_until_complete 方法，运行 future
     loop.run_until_complete(server.wait_closed())
-    loop.close()  # 终止事件循环
+    # 终止事件循环
+    loop.close() 
 
 ## 以下使用create_task() + run_forever(), 也是正确的做法
 ## try:
